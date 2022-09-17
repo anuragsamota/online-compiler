@@ -18,7 +18,7 @@ function changeLanguage() {
 }
 function executeCode() {
 
-    $.ajex({
+    $.ajax({
 
         URL: "/ide/app/compiler.php",
 

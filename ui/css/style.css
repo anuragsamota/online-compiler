@@ -39,6 +39,9 @@
     padding: 8;
     border: 0;
 }
+.btn:active{
+    border: 2px solid black;
+}
 
 .output {
         padding: 4px;
