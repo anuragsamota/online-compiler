@@ -5,3 +5,32 @@ window.onload = function() {
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/c_cpp");
 }
+
+function changeLanguage() {
+
+    let language = $("#language").val();
+
+    if (language == 'c' || language == 'cpp' )editor.session.setMode("ace/mode/c_ccp");
+    else if(language == 'php')editor.session.setMode("ace/mode/php");
+    else if(language == 'python')editor.session.setMode("ace/mode/python");
+    else if(language == 'node')editor.session.setMode("ace/mode/javascript");
+
+}
+function executeCode() {
+
+    $.ajex({
+
+        URL: "/ide/app/compiler.php",
+
+        method: "POST",
+
+        date: {
+            language: $("#languages").val(),
+            code: editor.getSession().getValue()
+        },
+
+        success: function(response) {
+            $(".output").text(response)
+        }
+    })
+}
