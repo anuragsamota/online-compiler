@@ -4,7 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
-const { exec } = require("child_process");
+const child_process = require("child_process");
 
 
 
@@ -17,7 +17,6 @@ async function tempfile(filedata){
         }
         console.log("The file was saved!");
     });
-    return;
 }
 
 
@@ -36,8 +35,9 @@ app.get('/', function (req, res) {
 
 //executing command on post request on c route
 app.post('/nodejs',bodyParser.json(),async (req,res)=>{
+    let std_out,std_err
     await tempfile(req.body.code)
-    await exec("node ./temp.js",(error,stderr,stdout)=>{
+    await child_process.exec("node ./temp.js",(error,stdout,stderr)=>{
         console.log("Executing the command...")
         if (error) {
             console.log(`error: ${error.message}`);
@@ -45,18 +45,24 @@ app.post('/nodejs',bodyParser.json(),async (req,res)=>{
         }
         if (stderr) {
             console.log(`stderr: ${stderr}`);
-            res.json({
-                std_res : stderr,
-            });
+            std_err = stderr;
             return;
         }
         console.log(`stdout: ${stdout}`);
-        res.json({
-            std_res : stdout,
-            std_err : stderr,
-        })
+        std_out = stdout;
     })
+    res.json({
+        res : std_out,
+        err : std_err,
+    })
+    res.end();
 })
+
+
+app.post('/test',bodyParser.json(),(req,res)=>{
+    console.log(req.body)
+    res.end()
+});
 
 
 app.use(express.static(path.join('tempui')))
