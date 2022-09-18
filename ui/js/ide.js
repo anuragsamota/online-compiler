@@ -42,7 +42,7 @@ const langSelector = document.getElementById("languages");
 
 let editor = ace.edit("editor");
 editor.setTheme("ace/theme/monokai");
-editor.session.setMode("ace/mode/c_cpp");
+editor.session.setMode("ace/mode/python");
 
 let language;
 
@@ -66,6 +66,7 @@ langSelector.onchange =()=> {
   if (language == 'c' || language == 'cpp' )editor.session.setMode("ace/mode/c_ccp");
   else if(language == 'python')editor.session.setMode("ace/mode/python");
   else if(language == 'node')editor.session.setMode("ace/mode/javascript");
+  console.log(language)
 }
 
 
@@ -79,7 +80,18 @@ runBtn.onclick = async () => {
       resp = await postData('/python',{
           code : editor.getSession().getValue(),
       })
+    }else if(language=='c'){
+      resp = await postData('/c',{
+        code : editor.getSession().getValue(),
+      })
+    }else if(language == 'cpp'){
+      resp = await postData('/cpp',{
+        code : editor.getSession().getValue(),
+      })
     }
+
+
+    
     if(resp.res != ""){
       output.innerHTML = resp.res;
       output.style.color = "black";

@@ -60,6 +60,23 @@ app.post('/python',bodyParser.json(),async (req,res)=>{
 })
 
 
+//c endpoint
+app.post('/c',bodyParser.json(),async (req,res)=>{
+    await tempfile("./tempc.c",req.body.code)
+    await child_process.exec("gcc tempc.c",(error,stdout,stderr)=>{
+
+    })
+    await child_process.exec("/a",(error,stdout,stderr)=>{
+        res.json({
+            res : stdout,
+            err : stderr,
+            servererr: error,
+        })
+    })
+    //res.end();
+})
+
+
 app.use(express.static(path.join('ui')))
 app.use(cors())
 app.listen(process.env.PORT,()=>{ console.log(`app is listening on port ${process.env.PORT}`)});
