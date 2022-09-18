@@ -4,20 +4,17 @@ const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
-const { exec } = require("child_process");
+const child_process = require("child_process");
 
 
 
 // temp file store function
-async function tempfile(filedata){
-    await fs.writeFile("temp.js", filedata, function(err) {
+async function tempfile(filename,filedata){
+    await fs.writeFile(filename, filedata, function(err) {
         if(err) {
-            console.log(err);
             return err;
         }
-        console.log("The file was saved!");
     });
-    return;
 }
 
 
@@ -34,28 +31,32 @@ app.get('/', function (req, res) {
 })
 
 
-//executing command on post request on c route
+
+//node js endpoint
 app.post('/nodejs',bodyParser.json(),async (req,res)=>{
-    await tempfile(req.body.code)
-    await exec("node ./temp.js",(error,stderr,stdout)=>{
-        console.log("Executing the command...")
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            res.json({
-                std_res : stderr,
-            });
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
+    await tempfile("./tempnode.js",req.body.code)
+    await child_process.exec("node ./tempnode.js",(error,stdout,stderr)=>{
         res.json({
-            std_res : stdout,
-            std_err : stderr,
+            res : stdout,
+            err : stderr,
+            servererr: error,
         })
     })
+    //res.end();
+})
+
+
+//python endpoint
+app.post('/python',bodyParser.json(),async (req,res)=>{
+    await tempfile("./temppython.py",req.body.code)
+    await child_process.exec("python temppython.py",(error,stdout,stderr)=>{
+        res.json({
+            res : stdout,
+            err : stderr,
+            servererr: error,
+        })
+    })
+    //res.end();
 })
 
 
