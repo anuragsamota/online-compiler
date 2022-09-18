@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Compiler</title>
     <link rel="stylesheet" href="css/style.css" />
+    <script defer src="js/lib/ace.js"></script>
+    <script defer src="js/lib/theme-monokai.js"></script>
+    <script defer src="./js/ide.js"></script>
 </head>
 <body>
 
@@ -13,10 +16,9 @@
     <div class="control-panel">
         Select Language:
         &nbsp; &nbsp;
-        <select id="languages" class="languages" onchange="changelanguage()">
+        <select id="languages" class="languages">
             <option value="c"> C </option>
             <option value="cpp"> C++ </option>
-            <option value="php"> PHP </option>
             <option value="python"> Python </option>
             <option value="node"> Node JS </option>
         </select>
@@ -24,13 +26,9 @@
     <div class="editor" id="editor"></div>
 
     <div class="button-container">
-        <button class="btn" onclick="executeCode()"> Run </button>
+        <button class="btn" id="run-btn">Run</button>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <div class="output"></div>
-    <script src="js/lib/ace.js"></script>
-    <script src="js/lib/theme-monokai.js"></script>
-    <script src="./js/ide.js"></script>
-
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <div id="output" class="output"></div>
 </body>
 </html>

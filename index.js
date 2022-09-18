@@ -21,7 +21,7 @@ async function tempfile(filename,filedata){
 process.env.PORT = 4040;
 
 app.get('/', function (req, res) {
-    fs.readFile("./tempui/index.html",'utf-8',function (err, html){
+    fs.readFile("./ui/index.html",'utf-8',function (err, html){
         if(err){
             res.status(500).send("sorry out of order");
         }else{
@@ -60,6 +60,6 @@ app.post('/python',bodyParser.json(),async (req,res)=>{
 })
 
 
-app.use(express.static(path.join('tempui')))
+app.use(express.static(path.join('ui')))
 app.use(cors())
 app.listen(process.env.PORT,()=>{ console.log(`app is listening on port ${process.env.PORT}`)});
