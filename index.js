@@ -9,13 +9,11 @@ const child_process = require("child_process");
 
 
 // temp file store function
-async function tempfile(filedata){
-    await fs.writeFile("temp.js", filedata, function(err) {
+async function tempfile(filename,filedata){
+    await fs.writeFile(filename, filedata, function(err) {
         if(err) {
-            console.log(err);
             return err;
         }
-        console.log("The file was saved!");
     });
 }
 
@@ -33,36 +31,33 @@ app.get('/', function (req, res) {
 })
 
 
-//executing command on post request on c route
+
+//node js endpoint
 app.post('/nodejs',bodyParser.json(),async (req,res)=>{
-    let std_out,std_err
-    await tempfile(req.body.code)
-    await child_process.exec("node ./temp.js",(error,stdout,stderr)=>{
-        console.log("Executing the command...")
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            std_err = stderr;
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-        std_out = stdout;
+    await tempfile("./tempnode.js",req.body.code)
+    await child_process.exec("node ./tempnode.js",(error,stdout,stderr)=>{
+        res.json({
+            res : stdout,
+            err : stderr,
+            servererr: error,
+        })
     })
-    res.json({
-        res : std_out,
-        err : std_err,
-    })
-    res.end();
+    //res.end();
 })
 
 
-app.post('/test',bodyParser.json(),(req,res)=>{
-    console.log(req.body)
-    res.end()
-});
+//python endpoint
+app.post('/python',bodyParser.json(),async (req,res)=>{
+    await tempfile("./temppython.py",req.body.code)
+    await child_process.exec("python temppython.py",(error,stdout,stderr)=>{
+        res.json({
+            res : stdout,
+            err : stderr,
+            servererr: error,
+        })
+    })
+    //res.end();
+})
 
 
 app.use(express.static(path.join('tempui')))
